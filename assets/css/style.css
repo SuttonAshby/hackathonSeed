@@ -1,3 +1,7 @@
 #imgDisplay {
     width: 100%
 }
+
+body {
+    background-image: url(../images/dust_scratches.png)
+}
