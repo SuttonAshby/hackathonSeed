@@ -1,20 +1,21 @@
 var app = {
-    userID: undefined,
-    currentImg: undefined,
-    rating: undefined,
-    galleryArr: [111, 116, 155, 161, 201, 204, 226, 244, 265, 283, 299],
+    userID: undefined, //holds current user ID
+    currentImg: undefined, //holds current image ID
+    rating: undefined, //holds rating of current image 1 is like 0 is dislike
+    galleryArr: [111, 116, 155, 161, 201, 204, 226, 244, 265, 283, 299], //the current galleries we are using
     galleryURL: "https://hackathon.philamuseum.org/api/v0/collection/object/location?api_token=2PLQ58sNUwpwizfOqiEuK13NLXcxBjOaMIQ9933Iw4MYWkhEtrsJskEDqmFo&name=",
     imageURL: "https://hackathon.philamuseum.org/api/v0/collection/object?api_token=2PLQ58sNUwpwizfOqiEuK13NLXcxBjOaMIQ9933Iw4MYWkhEtrsJskEDqmFo&query=",
-    currentGallery: undefined,
+    currentGallery: undefined, //current gallery
     config: {
         apiKey: "AIzaSyAz1ehL5MqmPsNdUJjt3qL2vYHV_YNErM8",
         databaseURL: "https://hackathonseed.firebaseio.com/",
     },
     initialize: function () {
 
-        $("#newUser").on("click", app.newUser)
-        $(".choice").on("click", app.choice)
+        $("#newUser").on("click", app.newUser) //reloads page
+        $(".choice").on("click", app.choice) //like or dislike buttons
 
+        //initializes firebase, connections and disconnect
         firebase.initializeApp(app.config);
         database = firebase.database()
 
@@ -28,19 +29,18 @@ var app = {
             }
         })
 
-        app.newID()
-        console.log(app.userID)
-        app.getGallery()
+        app.newID() //gets new ID
+        app.getGallery() //gets first gallery
     },
     newID: function () {
+        //generates a random five digit user ID. DOES NOT check if it has been used before
         app.userID = Math.floor(Math.random() * 90000) + 10000;
     },
     getImage: function () {
-
+        //gets new gallery if the current one is used up
         if (app.currentGallery.length === 0) {
             app.getGallery()
         } else {
-
             app.currentImg = app.currentGallery[0]
             app.currentGallery.shift()
             $.ajax({
@@ -52,6 +52,7 @@ var app = {
         }
     },
     getGallery: function () {
+        //gets a gallery randomly
         var randNum = Math.floor(Math.random() * app.galleryArr.length)
         var randGallery = app.galleryArr[randNum]
         app.galleryArr.splice(randNum, 1)
@@ -66,6 +67,7 @@ var app = {
         })
     },
     choice: function () {
+        //user rating set and pushed to firebase
         if ($(this).attr("id") === "like") {
             app.rating = 1;
         } else {
@@ -76,11 +78,12 @@ var app = {
             objectID: app.currentImg,
             rating: app.rating
         })
-
+        //gets next image
         app.getImage()
 
     },
     newUser: function () {
+        //reloads page for a new user
         location.reload();
     }
 }
