@@ -2,13 +2,13 @@ var app = {
     userID: undefined, //holds current user ID
     currentImg: undefined, //holds current image ID
     rating: undefined, //holds rating of current image 1 is like 0 is dislike
-    galleryArr: [161], //the current galleries we are using
+    galleryArr: [111, 116, 155, 161, 201, 204, 226, 244, 265, 283, 299], //the current galleries we are using
     galleryURL: "https://hackathon.philamuseum.org/api/v0/collection/object/location?api_token=2PLQ58sNUwpwizfOqiEuK13NLXcxBjOaMIQ9933Iw4MYWkhEtrsJskEDqmFo&name=",
     imageURL: "https://hackathon.philamuseum.org/api/v0/collection/object?api_token=2PLQ58sNUwpwizfOqiEuK13NLXcxBjOaMIQ9933Iw4MYWkhEtrsJskEDqmFo&query=",
     currentGallery: undefined, //current gallery
     config: {
-        apiKey: "AIzaSyDNN7T89-44F13F-kgCcIbpXRrzczA6Q3Q",
-        databaseURL: "https://hackseedtest.firebaseio.com/",
+        apiKey: "AIzaSyAz1ehL5MqmPsNdUJjt3qL2vYHV_YNErM8",
+        databaseURL: "https://hackathonseed.firebaseio.com/",
     },
     initialize: function () {
 
