@@ -2,13 +2,13 @@ var app = {
     userID: undefined, //holds current user ID
     currentImg: undefined, //holds current image ID
     rating: undefined, //holds rating of current image 1 is like 0 is dislike
-    galleryArr: [111, 116, 155, 161, 201, 204, 226, 244, 265, 283, 299], //the current galleries we are using
+    galleryArr: [161], //the current galleries we are using
     galleryURL: "https://hackathon.philamuseum.org/api/v0/collection/object/location?api_token=2PLQ58sNUwpwizfOqiEuK13NLXcxBjOaMIQ9933Iw4MYWkhEtrsJskEDqmFo&name=",
     imageURL: "https://hackathon.philamuseum.org/api/v0/collection/object?api_token=2PLQ58sNUwpwizfOqiEuK13NLXcxBjOaMIQ9933Iw4MYWkhEtrsJskEDqmFo&query=",
     currentGallery: undefined, //current gallery
     config: {
-        apiKey: "AIzaSyAz1ehL5MqmPsNdUJjt3qL2vYHV_YNErM8",
-        databaseURL: "https://hackathonseed.firebaseio.com/",
+        apiKey: "AIzaSyDNN7T89-44F13F-kgCcIbpXRrzczA6Q3Q",
+        databaseURL: "https://hackseedtest.firebaseio.com/",
     },
     initialize: function () {
 
@@ -53,33 +53,42 @@ var app = {
     },
     getGallery: function () {
         //gets a gallery randomly
-        var randNum = Math.floor(Math.random() * app.galleryArr.length)
-        var randGallery = app.galleryArr[randNum]
-        app.galleryArr.splice(randNum, 1)
-        $.ajax({
-            url: app.galleryURL + randGallery,
-            method: "GET"
-        }).then(function (response) {
-            console.log("successful call")
-            app.currentGallery = response.ObjectIDs
-            console.log(app.currentGallery)
-            app.getImage()
-        })
+        if (app.galleryArr.length > 0) {
+            var randNum = Math.floor(Math.random() * app.galleryArr.length)
+            var randGallery = app.galleryArr[randNum]
+            app.galleryArr.splice(randNum, 1)
+            $.ajax({
+                url: app.galleryURL + randGallery,
+                method: "GET"
+            }).then(function (response) {
+                console.log("successful call")
+                app.currentGallery = response.ObjectIDs
+                console.log(app.currentGallery)
+                app.getImage()
+            })
+        } else {
+            app.userID = null;
+            app.currentImg = null;
+            app.rating = null;
+            $("#imgDisplay").attr("src", "assets/images/hackSeedTY.png")
+        }
     },
     choice: function () {
         //user rating set and pushed to firebase
-        if ($(this).attr("id") === "like") {
-            app.rating = 1;
-        } else {
-            app.rating = 0;
+        if (app.userID !== null) {
+            if ($(this).attr("id") === "like") {
+                app.rating = 1;
+            } else {
+                app.rating = 0;
+            }
+            database.ref("Dataset").push({
+                user: app.userID,
+                objectID: app.currentImg,
+                rating: app.rating
+            })
+            //gets next image
+            app.getImage()
         }
-        database.ref("Dataset").push({
-            user: app.userID,
-            objectID: app.currentImg,
-            rating: app.rating
-        })
-        //gets next image
-        app.getImage()
 
     },
     newUser: function () {
